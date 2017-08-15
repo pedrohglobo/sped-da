@@ -184,7 +184,10 @@ class Damdfe extends Common
         if ($this->dom->getElementsByTagName("valePed")->item(0) != "") {
             $this->valePed = $this->dom->getElementsByTagName("valePed")->item(0)->getElementsByTagName("disp");
         }
-        $this->infCpl = $this->dom->getElementsByTagName("infCpl")->item(0)->nodeValue;
+        $this->infCpl = "";
+        if ($this->dom->getElementsByTagName("infCpl")->item(0) != "") {
+            $this->infCpl = $this->dom->getElementsByTagName("infCpl")->item(0)->nodeValue;
+        }
         $this->chMDFe = str_replace(
             'MDFe',
             '',
@@ -480,11 +483,11 @@ class Damdfe extends Common
             }
             $this->pdf->Image($this->logomarca, $xImg, $yImg, $nImgW, $nImgH, 'jpeg');
         } else {
-            $x1 = $x+40;
-            $y1 = $y;
+            $x1 = $x+2;
+            $y1 = $y+2;
             $tw = $w;
         }
-        $aFont = array('font'=>$this->fontePadrao, 'size'=>8, 'style'=>'');
+        $aFont = array('font'=>$this->fontePadrao, 'size'=>9, 'style'=>'');
         $razao = $this->xNome;
         $cnpj = 'CNPJ: '.$this->pFormat($this->CNPJ, "###.###.###/####-##");
         $ie = 'IE: '.$this->pFormat($this->IE, '###/#######');
@@ -520,8 +523,9 @@ class Damdfe extends Common
         $this->pTextBox($x, $y, $maxW, 20);
         $bH = 16;
         $w = $maxW;
+        $bW = round(($w / 3), 0);
         $this->pdf->SetFillColor(0, 0, 0);
-        $this->pdf->Code128($x + 5, $y+2, $this->chMDFe, $maxW - 10, $bH);
+        $this->pdf->Code128($x + $bW, $y+2, $this->chMDFe, $bW, $bH);
         $this->pdf->SetFillColor(255, 255, 255);
         $y = $y + 22;
         $this->pTextBox($x, $y, $maxW, 10);
@@ -698,6 +702,8 @@ class Damdfe extends Common
         $texto = number_format($this->qCarga, 4, ', ', '.');
         $aFont = array('font'=>$this->fontePadrao, 'size'=>10, 'style'=>'');
         $this->pTextBox($x1, $y+4, $x2, 10, $texto, $aFont, 'T', 'C', 0, '', false);
+        $x1 += $x2;
+        $this->pTextBox($x1, $y, ($maxW / 2), 12);
         $x1 = $x;
         $y += 12;
         $yold = $y;
@@ -731,7 +737,7 @@ class Damdfe extends Common
         $this->pTextBox($x1, $y, $x2, 8, $texto, $aFont, 'T', 'L', 0, '', false);
         // RNTRC Não informado
         if ($this->rodo->getElementsByTagName("RNTRC")->length > 0) {
-            $texto = $this->rodo->getElementsByTagName("RNTRC")->item(0)->nodeValue;
+        $texto = $this->rodo->getElementsByTagName("RNTRC")->item(0)->nodeValue;
         } else {
             $texto = "";
         }
@@ -810,6 +816,7 @@ class Damdfe extends Common
         $x1 = round($maxW / 2, 0) + 7;
         $y = $yold;
         $x2 = round($maxW / 2, 0);
+        $this->pTextBox($x1, $y, $x2, 5);
         $texto = 'Condutor';
         $aFont = array('font'=>$this->fontePadrao, 'size'=>8, 'style'=>'');
         $this->pTextBox($x1, $y, $x2, 8, $texto, $aFont, 'T', 'L', 0, '', false);
