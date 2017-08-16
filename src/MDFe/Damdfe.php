@@ -643,8 +643,8 @@ class Damdfe extends Common
         $texto = 'Data e Hora de Emissão';
         $aFont = array('font'=>$this->fontePadrao, 'size'=>8, 'style'=>'');
         $this->pTextBox($x1, $y, $x2+11, 8, $texto, $aFont, 'T', 'L', 0, '', false);
-        $data = explode('T', $this->dhEmi);
-        $texto = $this->pYmd2dmy($data[0]).' - '.$data[1];
+        $tsHora = $this->pConvertTime($this->dhEmi);
+        $texto = date('d/m/Y - H:i:s', $tsHora);
         $aFont = array('font'=>$this->fontePadrao, 'size'=>10, 'style'=>'');
         $this->pTextBox($x1, $y+4, $x2+11, 10, $texto, $aFont, 'T', 'C', 0, '', false);
         $x1 += $x2+11;
