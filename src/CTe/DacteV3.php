@@ -2259,7 +2259,7 @@ class DacteV3 extends Common
             $this->arrayNFe[] = $chaveNFe;
         }
         $qtdeNFe = 1;
-        if (count($this->arrayNFe) >15) {
+        if (count($this->arrayNFe) >22) {
             $this->flagDocOrigContinuacao = 1;
             $qtdeNFe = count($this->arrayNFe);
         }
@@ -2294,17 +2294,17 @@ class DacteV3 extends Common
             case ($qtdeNFe > 116):
                 $this->totPag = 3;
                 break;
-            case ($qtdeNFe > 16):
+            case ($qtdeNFe > 22):
                 $this->totPag = 2;
                 break;
-            case ($qtdeNFe <= 16):
+            case ($qtdeNFe <= 22):
                 $this->totPag = 1;
                 break;
         }
         $r = $this->zCabecalho(1, 1, '1', $this->totPag);
         $contador = 0;
         while ($contador < count($this->arrayNFe)) {
-            if ($contador == 15) {
+            if ($contador == 22) {
                 break;
             }
             $tp = 'NF-e';
@@ -2420,7 +2420,7 @@ class DacteV3 extends Common
     {
         $x2 = $x;
         $y2 = $y;
-        $contador = 16;
+        $contador = 22;
         for ($i = 2; $i <= $this->totPag; $i++) {
             $x = $x2;
             $y = $y2;
@@ -2439,11 +2439,12 @@ class DacteV3 extends Common
             //$h = 6 + 3; // de altura do texto (primeira linha
             //$h = 9 + 3.5 ;// segunda linha
             //$h = 9 + 3.5+ 3.5 ;// segunda linha
-            $h = (( ( count($this->arrayNFe)/2 ) - 9) * 3.5)+9;
+            $temp  = ($this->totPag - $i) === 0 ? ($i > 2 ? count($this->arrayNFe) -22 : count($this->arrayNFe)):  (($this->totPag - $i)*116);
+            $h = (( ( $temp/$i ) - 9) * 3.5)+9;
             if (count($this->arrayNFe)%2 !=0) {
                 $h = $h+3.5;
             } // Caso tenha apenas 1 registro na ultima linha
-
+            
             $texto = 'DOCUMENTOS ORIGINÁRIOS - CONTINUACÃO';
             $aFont = $this->formatPadrao;
             $this->pTextBox($x, $y, $w, $h, $texto, $aFont, 'T', 'C', 1, '');
@@ -2473,7 +2474,7 @@ class DacteV3 extends Common
                 if ($this->lota == 1) {
                     $this->pdf->Line($x, $y, $x, $y + 31.5);
                 } else {
-                    $this->pdf->Line($x, $y, $x, $y + 49.5);
+                    $this->pdf->Line($x, $y, $x, $y + $h-3.5);
                 }
             } elseif ($this->modal == '3') {
                 $this->pdf->Line($x, $y, $x, $y + 34.1);
@@ -2501,7 +2502,7 @@ class DacteV3 extends Common
 //                    $contador++;
                     break;
                 }
-                $tp = 'NF-e';
+                $tp = 'NF-e'.$contador;
                 $chaveNFe = $this->arrayNFe[$contador];
                 $numNFe = substr($chaveNFe, 25, 9);
                 $serieNFe = substr($chaveNFe, 22, 3);
@@ -2689,7 +2690,7 @@ class DacteV3 extends Common
         $h = 18.5;
         $texto = 'DADOS ESPECÍFICOS DO MODAL RODOVIÁRIO';
         $aFont = $this->formatPadrao;
-        $this->pTextBox($x, $y, $w, $h * 3.2, $texto, $aFont, 'T', 'C', 1, '');
+        $this->pTextBox($x, $y, $w, $h+1.44, $texto, $aFont, 'T', 'C', 1, '');
         if ($this->lota == 1) {
             $this->pdf->Line($x, $y + 12, $w + 1, $y + 12); // LINHA DE BAIXO
         }
